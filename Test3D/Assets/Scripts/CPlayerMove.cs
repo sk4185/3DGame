@@ -11,9 +11,11 @@ public class CPlayerMove : MonoBehaviour {
     private Transform camPivot = null;
     private CCharacterState cState =null;
     private PhotonView pv = null;
+    private CharacterController cCtrl = null;
 
     public float speed;
     public float rotSpeed;
+    public float gravity = 20.0f;
 
     private Vector3 currPos = Vector3.zero;
     private Quaternion currRot = Quaternion.identity;
@@ -25,6 +27,7 @@ public class CPlayerMove : MonoBehaviour {
         camPivot = GameObject.Find("CamPivot").GetComponent<Transform>();
         cState = GetComponent<CCharacterState>();
         pv = GetComponent<PhotonView>();
+        cCtrl = GetComponent<CharacterController>();
 
         pv.synchronization = ViewSynchronization.UnreliableOnChange;
         pv.ObservedComponents[0] = this;
@@ -86,8 +89,11 @@ public class CPlayerMove : MonoBehaviour {
 
             pv.RPC("SetAni", PhotonTargets.All, 18);
 
-            tr.Translate(Vector3.forward * inputVector.z * speed * Time.deltaTime);
-            tr.Translate(Vector3.right * inputVector.x * speed * Time.deltaTime);
+            inputVector = tr.TransformDirection(inputVector);
+            inputVector *= speed;
+            inputVector.y -= gravity * Time.deltaTime;
+
+            cCtrl.Move(inputVector * Time.deltaTime);
         }
 
         if(inputVector.sqrMagnitude == 0.0f)

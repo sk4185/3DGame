@@ -10,10 +10,13 @@ public class CAIMove : MonoBehaviour {
     private CCharacterState cState = null;
     private CAnimaitonControl aniCtrl = null;
     private PhotonView pv = null;
-    private float DestDist = 0.5f;
+    private CharacterController cCtrl = null;
 
-    private Vector3 point;
-    private Vector3 prevPos;
+    private Vector3 point = Vector3.zero;
+    private Vector3 prevPos = Vector3.zero;
+
+    public float gravity = 20.0f;
+    private Vector3 move = Vector3.zero;
 
     private Vector3 currPos = Vector3.zero;
     private Quaternion currRot = Quaternion.identity;
@@ -26,6 +29,7 @@ public class CAIMove : MonoBehaviour {
         cState = GetComponent<CCharacterState>();
         aniCtrl = GetComponent<CAnimaitonControl>();
         pv = GetComponent<PhotonView>();
+        cCtrl = GetComponent<CharacterController>();
 
         pv.synchronization = ViewSynchronization.UnreliableOnChange;
         pv.ObservedComponents[0] = this;
@@ -66,20 +70,27 @@ public class CAIMove : MonoBehaviour {
     {
         while(!cState.isDie)
         {
-            float _posX = Random.Range(-12.0f, 12.0f);
-            float _posY = Random.Range(-12.0f, 12.0f);
+            float _posX = Random.Range(-23.0f, 23.0f);
+            float _posY = Random.Range(-32.0f, 14.0f);
             point = new Vector3(_posX, tr.position.y, _posY);    // 랜덤 위치 잡음
 
-            while(!(DestDist > Vector3.Distance(point, tr.position)))    // 목적지에 다다르지 않았으면
+            int delay = 100;
+
+            while(!(nvAgent.stoppingDistance > Vector3.Distance(point, tr.position)))    // 목적지에 다다르지 않았으면
             {
                 cState.state = (cState.isDie) ? 
                     CCharacterState.State.Die : CCharacterState.State.Move;
+
+                delay--;
+
+                if (delay == 0)
+                    break;
 
                 yield return new WaitForSeconds(0.2f);
             }
 
             cState.state = CCharacterState.State.Idle;
-            float _time = Random.Range(0.0f, 3.0f);
+            float _time = Random.Range(2.0f, 5.0f);
 
             yield return new WaitForSeconds(_time);
         }
@@ -98,20 +109,28 @@ public class CAIMove : MonoBehaviour {
                     {
                         nvAgent.isStopped = true;    // 멈춤
                         pv.RPC("SetAni", PhotonTargets.All, 1);
+                        move.y -= gravity * Time.deltaTime;
+                        cCtrl.Move(move * Time.deltaTime);
                     }
                     break;
 
                 case CCharacterState.State.Move:
 
-                    Vector3 _deltaPos = transform.position - prevPos;
-                    float _angle = Mathf.Atan2(_deltaPos.y, _deltaPos.x) * Mathf.Rad2Deg;
+                    float _delta_X = tr.position.x - prevPos.x;
+                    float _delta_Z = tr.position.z - prevPos.z;
 
-                    if (0 != _angle)    // 각도 조정
+                    if(0 != _delta_X)
                     {
-                        transform.rotation = Quaternion.Slerp(transform.rotation,
-                            Quaternion.Euler(0.0f, _angle, 0.0f), Time.deltaTime * 3.0f);
+                        tr.Rotate(Vector3.up * _delta_X * nvAgent.angularSpeed * Time.deltaTime);
 
-                        prevPos = transform.position;
+                        prevPos = tr.position;
+                    }
+
+                    if(0.1f > Mathf.Abs(_delta_Z))
+                    {
+                        pv.RPC("SetAni", PhotonTargets.All, 1);
+
+                        prevPos = tr.position;
                     }
 
                     if (pv.isMine)
@@ -120,6 +139,9 @@ public class CAIMove : MonoBehaviour {
                         nvAgent.isStopped = false;      // 출발
 
                         pv.RPC("SetAni", PhotonTargets.All, 18);
+
+                        move.y -= gravity * Time.deltaTime;
+                        cCtrl.Move(move * Time.deltaTime);
                     }
 
                     break;

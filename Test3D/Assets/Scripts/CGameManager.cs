@@ -11,8 +11,7 @@ public class CGameManager : MonoBehaviour {
     {
         pv = GetComponent<PhotonView>();
 
-        CreatePhotonGameObject("Bear");    // 플레이어 생성
-        //CreatePhotonGameObject("Bunny");
+        CreatePhotonGameObject("Prefabs/Bear");    // 플레이어 생성
 
         PhotonNetwork.isMessageQueueRunning = true;
     }
@@ -22,9 +21,13 @@ public class CGameManager : MonoBehaviour {
     {
         if(PhotonNetwork.player.ID == PhotonNetwork.room.MasterClientId)    // 방장이면
         {
-            CreatePhotonGameObject("AI");
-            //CreatePhotonGameObject("AI");
-            //CreatePhotonGameObject("AI");
+            for (int i = 10; i > 0; i--)
+            {
+                CreatePhotonGameObject("Prefabs/AI");
+            }
+            
+            //CreatePhotonGameObject("Prefabs/AI");
+            //CreatePhotonGameObject("Prefabs/AI");
         }
     }
 
@@ -38,6 +41,6 @@ public class CGameManager : MonoBehaviour {
         // 포톤 네트워크용 게임 오브젝트를 생성함
         // 이 게임 오브젝트는 포톤용 게임오브젝트이므로 반드시 PhotonView 컴포넌트를 가져야 함
         PhotonNetwork.Instantiate(_name,
-            new Vector3(_createPosX, 0.1f, _createPosZ), Quaternion.identity, 0);
+            new Vector3(_createPosX, 0.5f, _createPosZ), Quaternion.identity, 0);
     }
 }

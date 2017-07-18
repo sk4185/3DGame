@@ -77,14 +77,4 @@ public class CPlayerAttack : MonoBehaviour {
     {
         attackButton.interactable = true;
     }
-
-
-    //private bool IsAttack()
-    //{
-    //    if(anim.GetCurrentAnimatorStateInfo(0).IsName("NormalATK"))
-    //    {
-    //        return true;
-    //    }
-    //    return false;
-    //}
 }
