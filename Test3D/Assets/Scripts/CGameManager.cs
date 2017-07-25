@@ -21,11 +21,11 @@ public class CGameManager : MonoBehaviour {
     {
         if(PhotonNetwork.player.ID == PhotonNetwork.room.MasterClientId)    // 방장이면
         {
-            for (int i = 10; i > 0; i--)
+            for (int i = 30; i > 0; i--)
             {
                 CreatePhotonGameObject("Prefabs/AI");
             }
-            
+
             //CreatePhotonGameObject("Prefabs/AI");
             //CreatePhotonGameObject("Prefabs/AI");
         }

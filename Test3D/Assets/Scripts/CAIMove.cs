@@ -74,7 +74,8 @@ public class CAIMove : MonoBehaviour {
             float _posY = Random.Range(-32.0f, 14.0f);
             point = new Vector3(_posX, tr.position.y, _posY);    // 랜덤 위치 잡음
 
-            int delay = 100;
+            int delay = 30;
+
 
             while(!(nvAgent.stoppingDistance > Vector3.Distance(point, tr.position)))    // 목적지에 다다르지 않았으면
             {
@@ -90,7 +91,7 @@ public class CAIMove : MonoBehaviour {
             }
 
             cState.state = CCharacterState.State.Idle;
-            float _time = Random.Range(2.0f, 5.0f);
+            float _time = Random.Range(1.0f, 5.0f);
 
             yield return new WaitForSeconds(_time);
         }

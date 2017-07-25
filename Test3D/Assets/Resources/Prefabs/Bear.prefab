@@ -2411,7 +2411,7 @@ Transform:
   m_GameObject: {fileID: 1249069793156474}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.1, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4090106135850330}
   - {fileID: 4700462635855556}
@@ -3576,7 +3576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46eb57435a955764db8e3c171753d496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 1.5
   rotSpeed: 120
   gravity: 20
 --- !u!136 &136322176096691284
@@ -3854,8 +3854,8 @@ CharacterController:
   serializedVersion: 2
   m_Height: 0.5
   m_Radius: 0.15
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_SlopeLimit: 60
+  m_StepOffset: 0.2
   m_SkinWidth: 0.001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.25, z: 0}
