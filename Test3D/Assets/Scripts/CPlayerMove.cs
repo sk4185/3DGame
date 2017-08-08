@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using CnControls;
 
 
@@ -13,12 +14,22 @@ public class CPlayerMove : MonoBehaviour {
     private PhotonView pv = null;
     private CharacterController cCtrl = null;
 
-    public float speed;
+    private Button jumpButton;
+    private Button runButton;
+
+    public float walkSpeed;
+    public float moveSpeed;
     public float rotSpeed;
-    public float gravity = 20.0f;
+
+    private float verticalVelocity;
+    private float jumpForce = 5.0f;
+    private float gravity = 7.0f;
 
     private Vector3 currPos = Vector3.zero;
     private Quaternion currRot = Quaternion.identity;
+
+    private bool isRunning = false;
+    private bool isJumping = false;
 
     private void Awake()
     {
@@ -28,6 +39,12 @@ public class CPlayerMove : MonoBehaviour {
         cState = GetComponent<CCharacterState>();
         pv = GetComponent<PhotonView>();
         cCtrl = GetComponent<CharacterController>();
+
+        jumpButton = GameObject.Find("JumpButton").GetComponent<Button>();
+        runButton = GameObject.Find("RunButton").GetComponent<Button>();
+
+        jumpButton.onClick.AddListener(Jump);
+        runButton.onClick.AddListener(IsRunning);
 
         pv.synchronization = ViewSynchronization.UnreliableOnChange;
         pv.ObservedComponents[0] = this;
@@ -59,7 +76,7 @@ public class CPlayerMove : MonoBehaviour {
     }
 
 
-    private void Update()
+    private void LateUpdate()
     {
         if (pv.isMine && cState.isDie == false)
         {
@@ -76,30 +93,62 @@ public class CPlayerMove : MonoBehaviour {
 
     private void Move()
     {
-        var inputVector = new Vector3(CnInputManager.GetAxis("Horizontal"), 0, 
-            CnInputManager.GetAxis("Vertical"));
-
-        if (inputVector.sqrMagnitude > 0.01f) // 움직이면
+        if (cCtrl.isGrounded)
         {
-            tr.Rotate(Vector3.up * inputVector.x * rotSpeed * Time.deltaTime);
+            jumpButton.interactable = true;
+            verticalVelocity = -gravity * Time.deltaTime;
 
-            //float index;
-
-            //index = (inputVector.x > 0.35) ? 17 - inputVector.z : (inputVector.x < -0.35) ? 17 + inputVector.z : 18;
-
-            pv.RPC("SetAni", PhotonTargets.All, 18);
-
-            inputVector = tr.TransformDirection(inputVector);
-            inputVector *= speed;
-            inputVector.y -= gravity * Time.deltaTime;
-
-            cCtrl.Move(inputVector * Time.deltaTime);
+            if (isJumping == false)
+            {
+                verticalVelocity = jumpForce;
+            }
+        }
+        else
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
+            isJumping = true;
+            jumpButton.interactable = false;
         }
 
-        if(inputVector.sqrMagnitude == 0.0f)
+        Vector3 moveVector = Vector3.zero;
+        moveVector = new Vector3(CnInputManager.GetAxis("Horizontal"), verticalVelocity,
+        CnInputManager.GetAxis("Vertical"));
+
+        if(moveVector.sqrMagnitude > 0.5f)
+        {
+            int index;
+
+            index = isRunning == false ? 18 : 15;
+
+            pv.RPC("SetAni", PhotonTargets.All, index);
+
+            moveVector.z = isRunning == false ? moveVector.z * walkSpeed :
+                moveVector.z * moveSpeed;
+
+            tr.Rotate(Vector3.up * moveVector.x * rotSpeed * Time.deltaTime);
+            moveVector = tr.TransformDirection(moveVector);
+
+            cCtrl.Move(moveVector * Time.deltaTime);
+            cState.state = CCharacterState.State.Move;
+        }
+        
+        if(moveVector.sqrMagnitude < 0.5f)
         {
             pv.RPC("SetAni", PhotonTargets.All, 1);
         }
+    }
+
+
+    private void Jump()
+    {
+        isJumping = !isJumping;
+        pv.RPC("SetAni", PhotonTargets.All, 9);
+    }
+
+
+    private void IsRunning()
+    {
+        isRunning = !isRunning;
     }
 
 

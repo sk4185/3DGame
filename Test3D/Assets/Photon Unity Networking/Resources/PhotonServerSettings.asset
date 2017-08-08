@@ -48,4 +48,5 @@ MonoBehaviour:
   - Attack
   - SetAnimationEvent
   - SetDie
+  - Block
   DisableAutoOpenWizard: 1

@@ -31,7 +31,7 @@ public class CAnimaitonControl : MonoBehaviour {
                 return "Victory";
                 //break;
             case 4:
-                anim.SetInteger("animation", 4);    // Block
+                anim.SetTrigger("Block");    // Block
                 return "Block";
                 //break;
             case 5:

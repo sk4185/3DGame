@@ -17,7 +17,7 @@ public class CPlayerDamage : MonoBehaviour {
 
     public void Damage(int _damage)
     {
-        if(!cState.isDie)
+        if(!cState.isDie || cState.state != CCharacterState.State.Block)
             cState.HpDown(_damage);
     }
 }
