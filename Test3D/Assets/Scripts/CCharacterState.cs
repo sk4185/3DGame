@@ -27,7 +27,7 @@ public class CCharacterState : MonoBehaviour {
     {
         Idle,       // 대기
         Move,       // 이동
-        Attack,     // 공격
+        Block,     // 방어
         Die         // 사망
     };
     public State _state;

@@ -5,11 +5,13 @@ using UnityEngine;
 public class CGameManager : MonoBehaviour {
 
     private PhotonView pv = null;
+    private Transform[] spawnPoints;
 
 
     private void Awake()
     {
         pv = GetComponent<PhotonView>();
+        spawnPoints = GameObject.Find("SpawnPoints").GetComponentsInChildren<Transform>();
 
         CreatePhotonGameObject("Prefabs/Bear");    // 플레이어 생성
 
@@ -25,9 +27,6 @@ public class CGameManager : MonoBehaviour {
             {
                 CreatePhotonGameObject("Prefabs/AI");
             }
-
-            //CreatePhotonGameObject("Prefabs/AI");
-            //CreatePhotonGameObject("Prefabs/AI");
         }
     }
 
@@ -35,12 +34,11 @@ public class CGameManager : MonoBehaviour {
     // 포톤 객체 생성 메소드
     private void CreatePhotonGameObject(string _name)
     {
-        float _createPosX = Random.Range(-12.0f, 12.0f);
-        float _createPosZ = Random.Range(-12.0f, 12.0f);
+        int rand = Random.Range(0, spawnPoints.Length);
 
         // 포톤 네트워크용 게임 오브젝트를 생성함
         // 이 게임 오브젝트는 포톤용 게임오브젝트이므로 반드시 PhotonView 컴포넌트를 가져야 함
         PhotonNetwork.Instantiate(_name,
-            new Vector3(_createPosX, 0.5f, _createPosZ), Quaternion.identity, 0);
+            new Vector3(spawnPoints[rand].position.x, 0.5f, spawnPoints[rand].position.z), Quaternion.identity, 0);
     }
 }

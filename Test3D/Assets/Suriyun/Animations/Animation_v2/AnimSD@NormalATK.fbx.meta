@@ -436,6 +436,22 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.2884989
+        functionName: AttackAnimationEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 930eaa9eed587754081d0487a76872c5,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.33138412
+        functionName: AttackAnimationEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 930eaa9eed587754081d0487a76872c5,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1

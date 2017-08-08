@@ -9,7 +9,6 @@ public class CPlayerAttack : MonoBehaviour {
     private PhotonView pv = null;
     private CCharacterState cState = null;
     private CAnimaitonControl aniCtrl = null;
-    private Animator anim;
     private Button attackButton;
 
     public int attackDamage = 1;
@@ -21,23 +20,10 @@ public class CPlayerAttack : MonoBehaviour {
         pv = GetComponent<PhotonView>();
         cState = GetComponent<CCharacterState>();
         aniCtrl = GetComponent<CAnimaitonControl>();
-        anim = GetComponent<Animator>();
         attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
 
         attackButton.onClick.AddListener(AttackRPC);
     }
-
-
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        if (pv.isMine && cState.isDie == false && !IsAttack())
-    //        {
-    //            AttackRPC();
-    //        }
-    //    }
-    //}
 
 
     private void AttackRPC()
