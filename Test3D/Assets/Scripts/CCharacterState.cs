@@ -32,6 +32,7 @@ public class CCharacterState : MonoBehaviour {
     };
     public State _state;
 
+
     // 캐릭터 상태 프로퍼티
     public State state
     {

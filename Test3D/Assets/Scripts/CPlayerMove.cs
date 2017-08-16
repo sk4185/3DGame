@@ -78,11 +78,13 @@ public class CPlayerMove : MonoBehaviour {
 
     private void LateUpdate()
     {
-        if (pv.isMine && cState.isDie == false)
+        Debug.Log(cState.state);
+        if (pv.isMine && cState.isDie == false && cState.state != CCharacterState.State.Block)
         {
             Move();
         }
         else if (pv.isMine && cState.isDie == true) { }
+        else if(cState.state == CCharacterState.State.Block) { }
         else
         {
             tr.position = Vector3.Lerp(tr.position, currPos, Time.deltaTime * 3.0f);

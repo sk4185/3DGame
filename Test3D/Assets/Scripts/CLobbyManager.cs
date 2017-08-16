@@ -37,7 +37,7 @@ public class CLobbyManager : MonoBehaviour {
             "dev", // 방제목
             new RoomOptions() // 방 옵션 정보
             {
-                MaxPlayers = 10, // 최대 접속자 수
+                MaxPlayers = 4, // 최대 접속자 수
                 IsOpen = true, // 공개 여부
                 IsVisible = true // 검색 여부
             },
