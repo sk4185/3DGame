@@ -49,7 +49,8 @@ public class CPlayerAttack : MonoBehaviour {
 
         if (_collider.Length <= 0) return;
         
-        _collider[_collider.Length - 1].GetComponent<CPlayerDamage>().Damage(attackDamage);
+        if(_collider[_collider.Length-1].GetComponent<CCharacterState>().state != CCharacterState.State.Block)
+            _collider[_collider.Length - 1].GetComponent<CPlayerDamage>().Damage(attackDamage);
     }
 
 

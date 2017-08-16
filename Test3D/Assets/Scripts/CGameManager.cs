@@ -39,6 +39,6 @@ public class CGameManager : MonoBehaviour {
         // 포톤 네트워크용 게임 오브젝트를 생성함
         // 이 게임 오브젝트는 포톤용 게임오브젝트이므로 반드시 PhotonView 컴포넌트를 가져야 함
         PhotonNetwork.Instantiate(_name,
-            new Vector3(spawnPoints[rand].position.x, 0.5f, spawnPoints[rand].position.z), Quaternion.identity, 0);
+            new Vector3(spawnPoints[rand].position.x, 1.0f, spawnPoints[rand].position.z), Quaternion.identity, 0);
     }
 }
